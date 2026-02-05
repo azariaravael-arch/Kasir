@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply bg-gray-100 text-gray-900 antialiased;
+    }
+}
+
+@layer components {
+
+    /* Standard Card */
+    .premium-card {
+        @apply bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 border border-gray-200;
+    }
+
+    /* POS Grid Item */
+    .product-item {
+        @apply bg-white p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer;
+    }
+
+    /* Standard Button */
+    .add-btn {
+        @apply w-full py-2 bg-blue-600 text-white rounded font-bold hover:bg-blue-700 transition active:scale-95;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-gray-100;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-gray-300 rounded-full hover:bg-gray-400;
+    }
+}
