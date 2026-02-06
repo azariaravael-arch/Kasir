@@ -1,71 +1,86 @@
 <x-app-layout>
-    <div class="py-12">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">Detail Transaksi</h2>
-                    <a href="{{ route('pos.receipt', $sale) }}"
-                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                        Lihat Struk
+    <div class="py-8">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="premium-card shadow-premium">
+                <div class="flex justify-between items-center mb-8 pb-4 border-b border-gray-50">
+                    <h2 class="text-2xl font-black text-gray-900 flex items-center gap-3">
+                        <i class="fas fa-receipt text-primary-500"></i> Detail Transaksi
+                    </h2>
+                    <a href="{{ route('pos.receipt', $sale) }}" class="primary-btn flex items-center gap-2">
+                        <i class="fas fa-print"></i> Lihat Struk
                     </a>
                 </div>
 
-                <div class="grid grid-cols-2 gap-6 mb-6 pb-6 border-b">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8 pb-8 border-b border-gray-50">
                     <div>
-                        <div class="text-sm text-gray-600">No. Invoice</div>
-                        <div class="text-2xl font-bold">{{ $sale->invoice }}</div>
+                        <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">No. Invoice
+                        </div>
+                        <div class="text-lg font-black text-gray-900">{{ $sale->invoice }}</div>
                     </div>
                     <div>
-                        <div class="text-sm text-gray-600">Tanggal</div>
-                        <div class="text-lg font-semibold">{{ $sale->created_at->format('d M Y H:i') }}</div>
+                        <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Tanggal</div>
+                        <div class="text-sm font-bold text-gray-600">{{ $sale->created_at->format('d M Y H:i') }}</div>
                     </div>
                     <div>
-                        <div class="text-sm text-gray-600">Kasir</div>
-                        <div class="text-lg font-semibold">{{ $sale->user->name }}</div>
+                        <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Kasir</div>
+                        <div class="text-sm font-bold text-gray-600">{{ $sale->user->name }}</div>
                     </div>
                     <div>
-                        <div class="text-sm text-gray-600">Total Transaksi</div>
-                        <div class="text-2xl font-bold text-green-600">Rp {{ number_format($sale->total, 0, ',', '.') }}
+                        <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Transaksi
+                        </div>
+                        <div class="text-xl font-black text-primary-600">Rp
+                            {{ number_format($sale->total, 0, ',', '.') }}
                         </div>
                     </div>
                 </div>
 
-                <h3 class="text-xl font-bold mb-4">Item Penjualan</h3>
+                <h3 class="text-lg font-black text-gray-900 mb-6 flex items-center gap-2">
+                    <i class="fas fa-list-ul text-gray-400"></i> Item Penjualan
+                </h3>
 
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr class="bg-gray-100">
-                            <th class="text-left px-4 py-2">Produk</th>
-                            <th class="text-center px-4 py-2">Qty</th>
-                            <th class="text-right px-4 py-2">Harga</th>
-                            <th class="text-right px-4 py-2">Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($sale->items as $item)
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="px-4 py-3">
-                                    <div class="font-semibold">{{ $item->product->name ?? 'Produk Dihapus' }}</div>
-                                    <div class="text-xs text-gray-600">SKU: {{ $item->product->sku ?? '-' }}</div>
-                                </td>
-                                <td class="text-center px-4 py-3">{{ $item->qty }}</td>
-                                <td class="text-right px-4 py-3">Rp {{ number_format($item->price, 0, ',', '.') }}</td>
-                                <td class="text-right px-4 py-3 font-semibold">Rp
-                                    {{ number_format($item->subtotal, 0, ',', '.') }}
-                                </td>
+                <div class="overflow-x-auto border border-gray-50 rounded-xl overflow-hidden mb-8">
+                    <table class="min-w-full text-sm">
+                        <thead class="bg-gray-50/50 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                            <tr>
+                                <th class="text-left px-6 py-4">Produk</th>
+                                <th class="text-center px-6 py-4">Qty</th>
+                                <th class="text-right px-6 py-4">Harga</th>
+                                <th class="text-right px-6 py-4">Subtotal</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody class="divide-y divide-gray-50">
+                            @foreach($sale->items as $item)
+                                <tr class="group hover:bg-gray-50/50 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div class="font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
+                                            {{ $item->product->name ?? 'Produk Dihapus' }}</div>
+                                        <div class="text-[10px] font-bold text-gray-400">SKU:
+                                            {{ $item->product->sku ?? '-' }}</div>
+                                    </td>
+                                    <td class="text-center px-6 py-4">
+                                        <span class="px-2.5 py-1 bg-gray-100 rounded-lg font-bold text-gray-600">
+                                            {{ $item->qty }}
+                                        </span>
+                                    </td>
+                                    <td class="text-right px-6 py-4 font-medium text-gray-500">Rp
+                                        {{ number_format($item->price, 0, ',', '.') }}</td>
+                                    <td class="text-right px-6 py-4 font-black text-primary-600">Rp
+                                        {{ number_format($item->subtotal, 0, ',', '.') }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
 
-                <div class="flex justify-end mt-6">
-                    <div class="w-80">
-                        <div class="border-t pt-4">
-                            <div class="flex justify-between mb-4">
-                                <span class="font-semibold text-lg">Total:</span>
-                                <span class="font-bold text-2xl">Rp
-                                    {{ number_format($sale->total, 0, ',', '.') }}</span>
-                            </div>
+                <div class="flex justify-end pt-4">
+                    <div class="w-full md:w-80">
+                        <div
+                            class="flex justify-between items-center p-4 bg-primary-50 rounded-2xl border border-primary-100">
+                            <span class="font-black text-primary-700 uppercase tracking-widest text-xs">Total
+                                Pembayaran</span>
+                            <span class="font-black text-2xl text-primary-700">Rp
+                                {{ number_format($sale->total, 0, ',', '.') }}</span>
                         </div>
                     </div>
                 </div>

@@ -5,14 +5,27 @@
         </h2>
     </x-slot>
 
-    <div class="py-12 bg-gray-100">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8">
+    <div class="py-8">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="premium-card shadow-premium">
+                <div class="mb-8 pb-4 border-b border-gray-50 flex items-center justify-between">
+                    <h2 class="text-xl font-black text-gray-900 flex items-center gap-3">
+                        <i class="fas fa-plus-circle text-primary-500"></i> Tambah Produk Baru
+                    </h2>
+                    <a href="{{ route('products.index') }}"
+                        class="text-xs font-bold text-gray-400 hover:text-primary-500 transition-colors">
+                        <i class="fas fa-arrow-left"></i> Kembali
+                    </a>
+                </div>
 
                 @if ($errors->any())
-                    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
-                        <strong class="font-bold text-sm">Ada kesalahan input:</strong>
-                        <ul class="mt-2 text-xs list-disc list-inside">
+                    <div class="bg-red-50 border border-red-100 text-red-700 px-4 py-3 rounded-xl relative mb-6"
+                        role="alert">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong class="font-bold text-sm">Ada kesalahan input:</strong>
+                        </div>
+                        <ul class="text-xs list-disc list-inside opacity-80">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
@@ -25,25 +38,27 @@
                     @csrf
 
                     <div>
-                        <label for="name" class="block text-sm font-bold text-gray-700 uppercase tracking-wide">Nama
+                        <label for="name"
+                            class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-1">Nama
                             Produk</label>
                         <input type="text" name="name" id="name" value="{{ old('name') }}" required
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-bold text-gray-900">
+                            class="block w-full border-gray-100 bg-gray-50/50 rounded-xl shadow-sm focus:ring-primary-500 focus:border-primary-500 font-bold text-gray-900 transition-all">
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label for="sku" class="block text-sm font-bold text-gray-700 uppercase tracking-wide">SKU /
-                                Kode</label>
+                            <label for="sku"
+                                class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-1">SKU
+                                / Kode</label>
                             <input type="text" name="sku" id="sku" value="{{ old('sku') }}" required
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-bold text-gray-900">
+                                class="block w-full border-gray-100 bg-gray-50/50 rounded-xl shadow-sm focus:ring-primary-500 focus:border-primary-500 font-bold text-gray-900 transition-all">
                         </div>
 
                         <div>
                             <label for="category"
-                                class="block text-sm font-bold text-gray-700 uppercase tracking-wide">Kategori</label>
+                                class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-1">Kategori</label>
                             <select name="category" id="category" required
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-bold text-gray-900">
+                                class="block w-full border-gray-100 bg-gray-50/50 rounded-xl shadow-sm focus:ring-primary-500 focus:border-primary-500 font-bold text-gray-900 transition-all">
                                 <option value="">Pilih Kategori</option>
                                 <option value="Food" {{ old('category') == 'Food' ? 'selected' : '' }}>Food</option>
                                 <option value="Drink" {{ old('category') == 'Drink' ? 'selected' : '' }}>Drink</option>
@@ -57,33 +72,35 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="price"
-                                class="block text-sm font-bold text-gray-700 uppercase tracking-wide">Harga (Rp)</label>
+                                class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-1">Harga
+                                (Rp)</label>
                             <input type="number" name="price" id="price" value="{{ old('price') }}" required min="0"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-bold text-gray-900">
+                                class="block w-full border-gray-100 bg-gray-50/50 rounded-xl shadow-sm focus:ring-primary-500 focus:border-primary-500 font-bold text-gray-900 transition-all">
                         </div>
 
                         <div>
                             <label for="stock"
-                                class="block text-sm font-bold text-gray-700 uppercase tracking-wide">Stok</label>
+                                class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-1">Stok</label>
                             <input type="number" name="stock" id="stock" value="{{ old('stock') }}" required min="0"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-bold text-gray-900">
+                                class="block w-full border-gray-100 bg-gray-50/50 rounded-xl shadow-sm focus:ring-primary-500 focus:border-primary-500 font-bold text-gray-900 transition-all">
                         </div>
                     </div>
 
                     <div>
-                        <label for="image" class="block text-sm font-bold text-gray-700 uppercase tracking-wide">Gambar
+                        <label for="image"
+                            class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-1">Gambar
                             Produk</label>
-                        <input type="file" name="image" id="image" accept="image/*"
-                            class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <div class="p-4 border-2 border-dashed border-gray-100 rounded-xl bg-gray-50/30">
+                            <input type="file" name="image" id="image" accept="image/*"
+                                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-black file:uppercase file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 transition-all cursor-pointer">
+                        </div>
                     </div>
 
-                    <div class="pt-4 flex gap-3">
-                        <button type="submit"
-                            class="inline-flex justify-center py-2 px-6 border border-gray-300 shadow-sm text-sm font-bold rounded-md text-black bg-white hover:bg-gray-50 focus:outline-none transition">
-                            SIMPAN
+                    <div class="pt-6 flex gap-4 border-t border-gray-50">
+                        <button type="submit" class="primary-btn flex-1">
+                            <i class="fas fa-save mr-2"></i> SIMPAN PRODUK
                         </button>
-                        <a href="{{ route('products.index') }}"
-                            class="inline-flex justify-center py-2 px-6 border border-gray-300 shadow-sm text-sm font-bold rounded-md text-black bg-white hover:bg-gray-50 focus:outline-none transition">
+                        <a href="{{ route('products.index') }}" class="secondary-btn flex-1 text-center">
                             BATAL
                         </a>
                     </div>

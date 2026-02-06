@@ -1,82 +1,95 @@
 <x-app-layout>
-    <div class="py-12 bg-gray-100 min-h-[calc(100vh-64px)]">
-        <div class="max-w-md mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-sm sm:rounded-lg p-8 border border-gray-200">
+    <div class="py-10 bg-gray-50/50 min-h-[calc(100vh-64px)]">
+        <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="premium-card shadow-premium p-8 border-none ring-1 ring-gray-100">
 
                 <!-- Receipt Header -->
-                <div class="text-center border-b pb-6 mb-6">
-                    <h2 class="text-xl font-bold text-gray-900 uppercase">Struk Pembayaran</h2>
-                    <p class="text-sm text-gray-500 mt-1 font-bold">{{ config('app.name', 'Laravel POS') }}</p>
+                <div class="text-center border-b border-gray-100 pb-6 mb-8">
+                    <div
+                        class="w-16 h-16 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary-100">
+                        <i class="fas fa-receipt text-2xl text-primary-600"></i>
+                    </div>
+                    <h2 class="text-xl font-black text-gray-900 uppercase tracking-widest">Struk Pembayaran</h2>
+                    <p class="text-xs text-gray-400 mt-1 font-bold uppercase tracking-tighter">
+                        {{ config('app.name', 'Laravel POS') }}</p>
                 </div>
 
                 <!-- Transaction Info -->
-                <div class="grid grid-cols-2 gap-4 mb-8 text-sm">
+                <div class="grid grid-cols-2 gap-6 mb-10">
                     <div>
-                        <div class="text-gray-500 font-bold text-xs uppercase">No. Invoice</div>
-                        <div class="font-bold text-gray-950">{{ $sale->invoice }}</div>
+                        <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">No. Invoice
+                        </div>
+                        <div class="font-bold text-gray-900 text-sm">{{ $sale->invoice }}</div>
                     </div>
                     <div class="text-right">
-                        <div class="text-gray-500 font-bold text-xs uppercase">Tanggal</div>
-                        <div class="font-bold text-gray-950">{{ $sale->created_at->format('d/m/Y H:i') }}</div>
+                        <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Tanggal</div>
+                        <div class="font-bold text-gray-900 text-sm">{{ $sale->created_at->format('d/m/Y H:i') }}</div>
                     </div>
                     <div>
-                        <div class="text-gray-500 font-bold text-xs uppercase">Kasir</div>
-                        <div class="font-bold text-gray-950">{{ $sale->user->name }}</div>
+                        <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Kasir</div>
+                        <div class="font-bold text-gray-900 text-sm">{{ $sale->user->name }}</div>
                     </div>
                     <div class="text-right">
-                        <div class="text-gray-500 font-bold text-xs uppercase">Status</div>
-                        <div class="font-bold text-blue-700">LUNAS</div>
+                        <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Status</div>
+                        <div class="font-black text-primary-600 text-sm italic">LUNAS</div>
                     </div>
                 </div>
 
                 <!-- Items -->
-                <div class="space-y-4 mb-8">
-                    <div class="text-xs font-bold text-gray-400 uppercase tracking-widest border-b pb-2">Rincian Item
+                <div class="space-y-4 mb-10">
+                    <div
+                        class="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50 pb-2 flex items-center gap-2">
+                        <i class="fas fa-shopping-basket text-[8px]"></i> Rincian Item
                     </div>
-                    @foreach($sale->items as $item)
-                        <div class="flex justify-between items-start">
-                            <div class="flex-1">
-                                <div class="text-sm font-bold text-gray-900">{{ $item->product->name }}</div>
-                                <div class="text-xs text-gray-500 font-bold">{{ $item->qty }} x Rp
-                                    {{ number_format($item->price, 0, ',', '.') }}</div>
+                    <div class="divide-y divide-gray-50">
+                        @foreach($sale->items as $item)
+                            <div class="flex justify-between items-start py-3">
+                                <div class="flex-1">
+                                    <div class="text-sm font-bold text-gray-900">{{ $item->product->name }}</div>
+                                    <div class="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">
+                                        {{ $item->qty }} x Rp {{ number_format($item->price, 0, ',', '.') }}
+                                    </div>
+                                </div>
+                                <div class="text-right text-sm font-black text-gray-900">
+                                    Rp {{ number_format($item->subtotal, 0, ',', '.') }}
+                                </div>
                             </div>
-                            <div class="text-right text-sm font-bold text-gray-900">
-                                Rp {{ number_format($item->subtotal, 0, ',', '.') }}
-                            </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
 
                 <!-- Footer Summary -->
-                <div class="border-t-2 border-dashed pt-6 space-y-2">
-                    <div class="flex justify-between items-center text-sm">
-                        <span class="text-gray-500 font-bold uppercase">Subtotal</span>
+                <div class="border-t-2 border-dashed border-gray-100 pt-8 space-y-4">
+                    <div class="flex justify-between items-center px-2">
+                        <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Subtotal</span>
                         <span class="font-bold text-gray-900">Rp {{ number_format($sale->total, 0, ',', '.') }}</span>
                     </div>
-                    <div class="flex justify-between items-center bg-gray-950 p-4 rounded-lg mt-4">
-                        <span class="text-white text-xs font-bold uppercase">Total Bayar</span>
-                        <span class="text-white text-xl font-extrabold text-blue-400">Rp
+                    <div
+                        class="flex justify-between items-center bg-primary-600 p-5 rounded-2xl shadow-lg shadow-primary-200">
+                        <span class="text-white text-[10px] font-black uppercase tracking-widest">Total Bayar</span>
+                        <span class="text-white text-2xl font-black">Rp
                             {{ number_format($sale->total, 0, ',', '.') }}</span>
                     </div>
                 </div>
 
-                <div class="text-center mt-10 text-gray-400 text-xs font-bold uppercase">
-                    Terima Kasih Atas Kunjungan Anda
+                <div class="text-center mt-12 text-gray-400 text-[10px] font-black uppercase tracking-[0.2em] italic">
+                    ~ Terima Kasih ~
                 </div>
 
                 <!-- Actions -->
-                <div class="mt-10 flex flex-col gap-3 no-print">
-                    <button onclick="window.print()"
-                        class="w-full py-3 bg-gray-800 text-white rounded-md font-bold text-sm hover:bg-black transition">
-                        CETAK STRUK
+                <div class="mt-12 flex flex-col gap-3 no-print">
+                    <button onclick="window.print()" class="primary-btn w-full bg-gray-900 hover:bg-black">
+                        <i class="fas fa-print mr-2"></i> CETAK STRUK
                     </button>
-                    <a href="{{ route('pos.index') }}"
-                        class="w-full py-3 bg-blue-600 text-white rounded-md font-bold text-sm text-center hover:bg-blue-700 transition">
-                        KEMBALI KE KASIR
+                    <a href="{{ route('pos.index') }}" class="primary-btn w-full text-center">
+                        <i class="fas fa-shopping-cart mr-2"></i> KEMBALI KE KASIR
                     </a>
                 </div>
             </div>
         </div>
+    </div>
+    </div>
+    </div>
     </div>
 
     <style>
