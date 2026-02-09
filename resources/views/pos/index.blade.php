@@ -364,11 +364,12 @@
     </style>
 
     <div class="pos-container px-6 py-4">
-        <div class="page-header">
+        <div class="page-header flex items-center justify-between">
             <h1 class="text-2xl font-black text-gray-900 flex items-center gap-3">
                 <i class="fas fa-shopping-cart text-primary-500"></i>
                 Kasir
             </h1>
+            <a href="{{ route('pos.heldPage') }}" class="px-3 py-2 bg-emerald-500 text-white rounded">Held Orders</a>
         </div>
 
         <!-- Main Content -->
@@ -453,8 +454,7 @@
 
                     <div class="action-buttons">
                         <button onclick="cancelOrder()" class="btn btn-cancel">Cancel Order</button>
-                        <button onclick="alert('Hold Order feature coming soon!')" class="btn btn-hold">Hold
-                            Order</button>
+                        <button onclick="holdOrder()" class="btn btn-hold">Hold Order</button>
                         <button onclick="checkout()" class="btn btn-pay">Pay (<span id="totalDisplay">Rp
                                 0</span>)</button>
                     </div>
@@ -462,6 +462,8 @@
             </aside>
         </main>
     </div>
+
+    
 
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -609,5 +611,45 @@
                 })
                 .catch(err => alert('Gagal memproses transaksi'));
         }
+
+        // Hold order: send items to backend and clear cart
+        function holdOrder() {
+            if (items.length === 0) return alert('Pilih produk terlebih dahulu!');
+            if (!confirm('Hold order ini?')) return;
+
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            fetch('{{ route('pos.hold') }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
+                body: JSON.stringify({ items: items })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        items = [];
+                        updateCart();
+                        alert('Order berhasil di-hold');
+                    } else {
+                        alert('Gagal: ' + data.message);
+                    }
+                })
+                .catch(err => alert('Gagal memproses hold order'));
+        }
+        // Load picked-up resumed cart from localStorage on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            try {
+                const stored = localStorage.getItem('pos_items');
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        items = parsed;
+                        updateCart();
+                    }
+                    localStorage.removeItem('pos_items');
+                }
+            } catch (e) {
+                console.error('Failed to load stored cart', e);
+            }
+        });
     </script>
 </x-app-layout>

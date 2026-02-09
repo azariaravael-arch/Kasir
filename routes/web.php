@@ -24,6 +24,10 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/pos', [SaleController::class, 'index'])->name('pos.index');
     Route::get('/pos/search', [SaleController::class, 'search'])->name('pos.search');
     Route::post('/pos', [SaleController::class, 'store'])->name('pos.store');
+    Route::post('/pos/hold', [SaleController::class, 'hold'])->name('pos.hold');
+    Route::get('/pos/held', [SaleController::class, 'held'])->name('pos.held');
+    Route::get('/pos/helds', [SaleController::class, 'heldPage'])->name('pos.heldPage');
+    Route::post('/pos/{sale}/resume', [SaleController::class, 'resume'])->name('pos.resume');
     Route::get('/pos/{sale}', [SaleController::class, 'show'])->name('pos.show');
     Route::get('/pos/{sale}/receipt', [SaleController::class, 'receipt'])->name('pos.receipt');
 });

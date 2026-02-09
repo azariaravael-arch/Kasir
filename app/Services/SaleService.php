@@ -13,14 +13,15 @@ class SaleService
 {
     /**
      * Buat transaksi penjualan dengan database transaction
-     * 
+     *
      * @param array $items Item yang dijual
      * @param User $user User yang melakukan transaksi
+     * @param string $status Status penjualan ('completed' atau 'held')
      * @return Sale
      */
-    public function createSale(array $items, User $user = null)
+    public function createSale(array $items, User $user = null, $status = 'completed')
     {
-        return DB::transaction(function () use ($items, $user) {
+        return DB::transaction(function () use ($items, $user, $status) {
             $user = $user ?? auth()->user();
             $invoice = 'INV-'.date('Ymd').'-'.Str::random(5);
             $total = 0;
@@ -34,10 +35,11 @@ class SaleService
             $sale = Sale::create([
                 'invoice' => $invoice,
                 'user_id' => $user->id,
-                'total' => $total
+                'total' => $total,
+                'status' => $status
             ]);
 
-            // Buat sale items dan update stok produk
+            // Buat sale items dan update stok produk jika status completed
             foreach ($items as $item) {
                 SaleItem::create([
                     'sale_id' => $sale->id,
@@ -47,10 +49,12 @@ class SaleService
                     'subtotal' => $item['qty'] * $item['price']
                 ]);
 
-                // Kurangi stok produk
-                // Ini akan trigger ProductObserver
-                $product = Product::find($item['product_id']);
-                $product->decrement('stock', $item['qty']);
+                // Kurangi stok produk hanya jika status completed
+                if ($status === 'completed') {
+                    // Ini akan trigger ProductObserver
+                    $product = Product::find($item['product_id']);
+                    $product->decrement('stock', $item['qty']);
+                }
             }
 
             return $sale;

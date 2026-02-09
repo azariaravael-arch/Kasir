@@ -9,7 +9,8 @@ class Sale extends Model
     protected $fillable = [
         'invoice',
         'user_id',
-        'total'
+        'total',
+        'status'
     ];
 
     public function items()

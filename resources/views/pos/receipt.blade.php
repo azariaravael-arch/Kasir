@@ -1,90 +1,98 @@
-<x-app-layout>
-    <div class="py-10 bg-gray-50/50 min-h-[calc(100vh-64px)]">
-        <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="premium-card shadow-premium p-8 border-none ring-1 ring-gray-100">
-
-                <!-- Receipt Header -->
-                <div class="text-center border-b border-gray-100 pb-6 mb-8">
-                    <div
-                        class="w-16 h-16 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary-100">
-                        <i class="fas fa-receipt text-2xl text-primary-600"></i>
-                    </div>
-                    <h2 class="text-xl font-black text-gray-900 uppercase tracking-widest">Struk Pembayaran</h2>
-                    <p class="text-xs text-gray-400 mt-1 font-bold uppercase tracking-tighter">
-                        {{ config('app.name', 'Laravel POS') }}</p>
+<x-print-layout>
+    <div class="py-10 bg-gray-50/50 min-h-[calc(100vh-64px)] flex items-center justify-center">
+        <!-- Thermal Receipt Container (80mm width = ~320px) -->
+        <div class="bg-white p-0" style="width: 320px; font-family: 'Courier New', monospace;">
+            
+            <!-- Receipt Paper -->
+            <div class="p-4 text-center text-xs" id="receiptContent">
+                
+                <!-- Header -->
+                <div class="mb-4 border-b border-black pb-3">
+                    <div class="font-bold text-sm mb-1">{{ config('app.name', 'KASIR') }}</div>
+                    <div class="text-[11px] font-bold">STRUK PEMBAYARAN</div>
+                    <div class="text-[10px] text-gray-600">Ama Pos</div>
                 </div>
 
                 <!-- Transaction Info -->
-                <div class="grid grid-cols-2 gap-6 mb-10">
-                    <div>
-                        <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">No. Invoice
-                        </div>
-                        <div class="font-bold text-gray-900 text-sm">{{ $sale->invoice }}</div>
+                <div class="mb-4 text-[11px] space-y-1 border-b border-black pb-3">
+                    <div class="flex justify-between">
+                        <span class="font-bold">Invoice:</span>
+                        <span>{{ $sale->invoice }}</span>
                     </div>
-                    <div class="text-right">
-                        <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Tanggal</div>
-                        <div class="font-bold text-gray-900 text-sm">{{ $sale->created_at->format('d/m/Y H:i') }}</div>
+                    <div class="flex justify-between">
+                        <span class="font-bold">Tanggal:</span>
+                        <span>{{ $sale->created_at->format('d/m/Y H:i') }}</span>
                     </div>
-                    <div>
-                        <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Kasir</div>
-                        <div class="font-bold text-gray-900 text-sm">{{ $sale->user->name }}</div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Status</div>
-                        <div class="font-black text-primary-600 text-sm italic">LUNAS</div>
+                    <div class="flex justify-between">
+                        <span class="font-bold">Kasir:</span>
+                        <span>{{ $sale->user->name }}</span>
                     </div>
                 </div>
 
-                <!-- Items -->
-                <div class="space-y-4 mb-10">
-                    <div
-                        class="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50 pb-2 flex items-center gap-2">
-                        <i class="fas fa-shopping-basket text-[8px]"></i> Rincian Item
+                <!-- Items Header -->
+                <div class="mb-2 text-[10px] font-bold border-b border-gray-400 pb-1">
+                    <div class="flex justify-between">
+                        <span>ITEM</span>
+                        <span>QTY x HARGA</span>
+                        <span>SUBTOTAL</span>
                     </div>
-                    <div class="divide-y divide-gray-50">
-                        @foreach($sale->items as $item)
-                            <div class="flex justify-between items-start py-3">
-                                <div class="flex-1">
-                                    <div class="text-sm font-bold text-gray-900">{{ $item->product->name }}</div>
-                                    <div class="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">
-                                        {{ $item->qty }} x Rp {{ number_format($item->price, 0, ',', '.') }}
-                                    </div>
-                                </div>
-                                <div class="text-right text-sm font-black text-gray-900">
-                                    Rp {{ number_format($item->subtotal, 0, ',', '.') }}
-                                </div>
+                </div>
+
+                <!-- Items List -->
+                <div class="mb-4 text-[10px] space-y-1">
+                    @foreach($sale->items as $item)
+                        <div class="border-b border-dotted border-gray-300 pb-1">
+                            <div class="font-bold text-left">{{ $item->product->name }}</div>
+                            <div class="flex justify-between text-[9px]">
+                                <span>{{ $item->qty }} x Rp {{ number_format($item->price, 0, ',', '.') }}</span>
+                                <span class="font-bold">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</span>
                             </div>
-                        @endforeach
+                        </div>
+                    @endforeach
+                </div>
+
+                <!-- Separator -->
+                <div class="border-b-2 border-black my-3"></div>
+
+                <!-- Summary -->
+                <div class="mb-4 text-[11px] space-y-2">
+                    <div class="flex justify-between">
+                        <span>Subtotal</span>
+                        <span class="font-bold">Rp {{ number_format($sale->total, 0, ',', '.') }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Pajak (10%)</span>
+                        <span class="font-bold">Rp {{ number_format($sale->total * 0.1, 0, ',', '.') }}</span>
+                    </div>
+                    <div class="bg-black text-white p-2 rounded flex justify-between font-bold text-[12px]">
+                        <span>TOTAL</span>
+                        <span>Rp {{ number_format($sale->total * 1.1, 0, ',', '.') }}</span>
                     </div>
                 </div>
 
-                <!-- Footer Summary -->
-                <div class="border-t-2 border-dashed border-gray-100 pt-8 space-y-4">
-                    <div class="flex justify-between items-center px-2">
-                        <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Subtotal</span>
-                        <span class="font-bold text-gray-900">Rp {{ number_format($sale->total, 0, ',', '.') }}</span>
-                    </div>
-                    <div
-                        class="flex justify-between items-center bg-primary-600 p-5 rounded-2xl shadow-lg shadow-primary-200">
-                        <span class="text-white text-[10px] font-black uppercase tracking-widest">Total Bayar</span>
-                        <span class="text-white text-2xl font-black">Rp
-                            {{ number_format($sale->total, 0, ',', '.') }}</span>
-                    </div>
+                <!-- Separator -->
+                <div class="border-b-2 border-black my-3"></div>
+
+                <!-- Footer -->
+                <div class="text-[10px] space-y-1 text-center">
+                    <div class="font-bold">PEMBAYARAN DITERIMA</div>
+                    <div class="text-gray-600 text-[9px] italic">Terima kasih atas pembelian Anda</div>
+                    <div class="mt-2 text-[9px] text-gray-500">{{ now()->format('d/m/Y H:i:s') }}</div>
                 </div>
 
-                <div class="text-center mt-12 text-gray-400 text-[10px] font-black uppercase tracking-[0.2em] italic">
-                    ~ Terima Kasih ~
-                </div>
+                <!-- Blank Space for thermal printer -->
+                <div class="mt-8 mb-12"></div>
 
-                <!-- Actions -->
-                <div class="mt-12 flex flex-col gap-3 no-print">
-                    <button onclick="window.print()" class="primary-btn w-full bg-gray-900 hover:bg-black">
-                        <i class="fas fa-print mr-2"></i> CETAK STRUK
-                    </button>
-                    <a href="{{ route('pos.index') }}" class="primary-btn w-full text-center">
-                        <i class="fas fa-shopping-cart mr-2"></i> KEMBALI KE KASIR
-                    </a>
-                </div>
+            </div>
+
+            <!-- Actions (No Print) -->
+            <div class="mt-6 px-4 space-y-3 no-print flex flex-col">
+                <button onclick="window.print()" class="w-full px-4 py-2 bg-black text-white font-bold rounded hover:bg-gray-800 flex items-center justify-center gap-2">
+                    <i class="fas fa-print"></i> CETAK STRUK
+                </button>
+                <a href="{{ route('pos.index') }}" class="w-full px-4 py-2 border-2 border-black text-black font-bold rounded text-center hover:bg-gray-100 flex items-center justify-center gap-2">
+                    <i class="fas fa-shopping-cart"></i> KEMBALI KE KASIR
+                </a>
             </div>
         </div>
     </div>
@@ -94,57 +102,49 @@
 
     <style>
         @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                width: 80mm;
+                background: white;
+            }
+
             .no-print {
                 display: none !important;
             }
 
-            body,
-            .bg-gray-100 {
-                background: white !important;
+            #receiptContent {
+                width: 80mm;
+                padding: 0;
+                margin: 0;
+                page-break-after: always;
+                text-align: center;
+                font-family: 'Courier New', monospace;
+                font-size: 11px;
+                line-height: 1.2;
             }
 
-            .py-12 {
-                padding: 0 !important;
-            }
-
-            .shadow-sm {
+            * {
                 box-shadow: none !important;
-                border: none !important;
-            }
-
-            .bg-white {
-                border: none !important;
-                padding: 0 !important;
-            }
-
-            .border-gray-200 {
-                border-color: #000 !important;
-            }
-
-            .rounded-lg {
+                text-shadow: none !important;
                 border-radius: 0 !important;
-            }
-
-            .bg-gray-950 {
-                background: transparent !important;
-                color: #000 !important;
-                border-top: 1px solid #000 !important;
-                border-bottom: 1px solid #000 !important;
-                padding: 10px 0 !important;
-            }
-
-            .text-blue-400 {
-                color: #000 !important;
             }
 
             img {
                 display: none !important;
             }
 
-            * {
-                box-shadow: none !important;
-                text-shadow: none !important;
+            @page {
+                size: 80mm auto;
+                margin: 0;
+            }
+        }
+
+        @media screen {
+            #receiptContent {
+                background: white;
+                border: 2px dashed #ccc;
             }
         }
     </style>
-</x-app-layout>
+</x-print-layout>

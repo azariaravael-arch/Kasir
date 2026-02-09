@@ -54,7 +54,7 @@ class SaleController extends Controller
             }
 
             // Proses penjualan dengan transaction
-            $sale = $service->createSale($request->items, $request->user());
+            $sale = $service->createSale($request->items, $request->user(), 'completed');
 
             return response()->json([
                 'success' => true,
@@ -70,12 +70,96 @@ class SaleController extends Controller
         }
     }
 
+    // Hold transaksi penjualan
+    public function hold(StoreSaleRequest $request, SaleService $service)
+    {
+        try {
+            // Proses hold tanpa validasi stok
+            $sale = $service->createSale($request->items, $request->user(), 'held');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Order berhasil di-hold',
+                'sale_id' => $sale->id,
+                'invoice' => $sale->invoice
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // Tampilkan list order yang di-hold (AJAX)
+    public function held()
+    {
+        $query = Sale::where('status', 'held');
+
+        if (!auth()->user()->isAdmin()) {
+            $query->where('user_id', auth()->user()->id);
+        }
+
+        $sales = $query->orderBy('created_at', 'desc')->get(['id', 'invoice', 'total', 'user_id', 'created_at']);
+
+        return response()->json($sales);
+    }
+
+    // Tampilkan halaman list held orders
+    public function heldPage()
+    {
+        return view('pos.held');
+    }
+
+    // Resume held order: return items to frontend and remove held record
+    public function resume(Sale $sale)
+    {
+        // Hanya user yang membuat transaksi atau admin yang bisa resume
+        if (auth()->user()->id !== $sale->user_id && !auth()->user()->isAdmin()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
+        if ($sale->status !== 'held') {
+            return response()->json(['success' => false, 'message' => 'Sale is not held'], 422);
+        }
+
+        $sale->load('items.product');
+
+        $items = [];
+        foreach ($sale->items as $it) {
+            $items[] = [
+                'product_id' => $it->product_id,
+                'name' => $it->product ? $it->product->name : 'Unknown',
+                'price' => $it->price,
+                'qty' => $it->qty,
+                'stock' => $it->product ? $it->product->stock : 0
+            ];
+        }
+
+        // Hapus sale dan sale items agar tidak duplikat saat checkout nanti
+        try {
+            \DB::transaction(function () use ($sale) {
+                $sale->items()->delete();
+                $sale->delete();
+            });
+
+            return response()->json(['success' => true, 'items' => $items]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
     // Tampilkan detail transaksi
     public function show(Sale $sale)
     {
         // Hanya user yang membuat transaksi atau admin yang bisa lihat
         if (auth()->user()->id !== $sale->user_id && !auth()->user()->isAdmin()) {
             abort(403);
+        }
+
+        // Hanya tampilkan transaksi yang completed
+        if ($sale->status !== 'completed') {
+            abort(404);
         }
 
         $sale->load('items.product', 'user');
