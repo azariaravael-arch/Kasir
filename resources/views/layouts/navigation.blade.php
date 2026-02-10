@@ -25,9 +25,29 @@
                         <i class="fas fa-chart-line"></i> Dashboard
                     </a>
 
+                    <a href="{{ route('master') }}"
+                        class="flex items-center gap-2 hover:text-white/80">
+                        <i class="fas fa-cube"></i> Master Data
+                    </a>
+
                     <a href="{{ route('pos.index') }}"
                         class="flex items-center gap-2 hover:text-white/80">
                         <i class="fas fa-shopping-cart"></i> Kasir
+                    </a>
+
+                    <a href="{{ route('purchases.index') }}"
+                        class="flex items-center gap-2 hover:text-white/80">
+                        <i class="fas fa-inbox"></i> Pembelian
+                    </a>
+
+                    <a href="{{ route('returns.index') }}"
+                        class="flex items-center gap-2 hover:text-white/80">
+                        <i class="fas fa-undo-alt"></i> Retur
+                    </a>
+
+                    <a href="{{ route('suppliers.index') }}"
+                        class="flex items-center gap-2 hover:text-white/80">
+                        <i class="fas fa-building"></i> Supplier
                     </a>
 
                     <a href="{{ route('products.index') }}"

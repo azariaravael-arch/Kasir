@@ -1,6 +1,9 @@
 <x-app-layout>
     <div class="py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Category Management Section -->
+          
+
             <div class="premium-card shadow-premium">
                 <div class="flex justify-between items-center mb-8 pb-4 border-b border-gray-50">
                     <h2 class="text-2xl font-black text-gray-900 flex items-center gap-3">
@@ -54,7 +57,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span
                                             class="px-3 py-1 text-[10px] font-black uppercase rounded-full bg-primary-50 text-primary-700 border border-primary-100">
-                                            {{ $product->category }}
+                                            {{ $product->categoryRelation?->name ?? '-' }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-black text-primary-600">
@@ -104,4 +107,160 @@
             </div>
         </div>
     </div>
+
+    <!-- Add Category Modal -->
+    <div class="modal fade" id="addCategoryModalIndex" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title" id="addCategoryModalLabel">
+                        <i class="fas fa-plus-circle me-2"></i>Tambah Kategori Baru
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addCategoryForm">
+                        <div class="mb-3">
+                            <label for="categoryName" class="form-label fw-bold">Nama Kategori</label>
+                            <input type="text" class="form-control" id="categoryName" name="name" placeholder="Contoh: Makanan Berat" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="categoryDesc" class="form-label fw-bold">Deskripsi</label>
+                            <textarea class="form-control" id="categoryDesc" name="description" rows="3" placeholder="Opsional - Deskripsi kategori"></textarea>
+                        </div>
+                    </form>
+                    <div id="categoryAlert"></div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="saveCategoryBtn">
+                        <i class="fas fa-save me-1"></i>Simpan Kategori
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Category Modal -->
+    <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title" id="editCategoryModalLabel">
+                        <i class="fas fa-edit me-2"></i>Edit Kategori
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editCategoryForm">
+                        <input type="hidden" id="editCategoryId" name="id">
+                        <div class="mb-3">
+                            <label for="editCategoryName" class="form-label fw-bold">Nama Kategori</label>
+                            <input type="text" class="form-control" id="editCategoryName" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editCategoryDesc" class="form-label fw-bold">Deskripsi</label>
+                            <textarea class="form-control" id="editCategoryDesc" name="description" rows="3"></textarea>
+                        </div>
+                    </form>
+                    <div id="editCategoryAlert"></div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="updateCategoryBtn">
+                        <i class="fas fa-save me-1"></i>Simpan Perubahan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add Category
+        document.getElementById('saveCategoryBtn').addEventListener('click', function() {
+            const form = document.getElementById('addCategoryForm');
+            const name = document.getElementById('categoryName').value;
+            const description = document.getElementById('categoryDesc').value;
+            const alertDiv = document.getElementById('categoryAlert');
+
+            if (!name.trim()) {
+                alertDiv.innerHTML = '<div class="alert alert-warning">Nama kategori tidak boleh kosong</div>';
+                return;
+            }
+
+            fetch('{{ route("categories.store.api") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    name: name,
+                    description: description
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    form.reset();
+                    alertDiv.innerHTML = '<div class="alert alert-success">Kategori berhasil ditambahkan!</div>';
+                    
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    alertDiv.innerHTML = '<div class="alert alert-danger">Gagal menambah kategori</div>';
+                }
+            })
+            .catch(error => {
+                alertDiv.innerHTML = '<div class="alert alert-danger">Error: ' + error + '</div>';
+            });
+        });
+
+        // Edit Category
+        function editCategory(id, name, description) {
+            document.getElementById('editCategoryId').value = id;
+            document.getElementById('editCategoryName').value = name;
+            document.getElementById('editCategoryDesc').value = description || '';
+        }
+
+        document.getElementById('updateCategoryBtn').addEventListener('click', function() {
+            const id = document.getElementById('editCategoryId').value;
+            const name = document.getElementById('editCategoryName').value;
+            const description = document.getElementById('editCategoryDesc').value;
+            const alertDiv = document.getElementById('editCategoryAlert');
+
+            if (!name.trim()) {
+                alertDiv.innerHTML = '<div class="alert alert-warning">Nama kategori tidak boleh kosong</div>';
+                return;
+            }
+
+            fetch(`/category/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    name: name,
+                    description: description
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alertDiv.innerHTML = '<div class="alert alert-success">Kategori berhasil diperbarui!</div>';
+                    
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    alertDiv.innerHTML = '<div class="alert alert-danger">Gagal memperbarui kategori</div>';
+                }
+            })
+            .catch(error => {
+                alertDiv.innerHTML = '<div class="alert alert-danger">Error: ' + error + '</div>';
+            });
+        });
+    </script>
 </x-app-layout>

@@ -55,16 +55,19 @@
                         </div>
 
                         <div>
-                            <label for="category"
-                                class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-1">Kategori</label>
-                            <select name="category" id="category" required
+                            <label for="category_id"
+                                class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-1 flex items-center justify-between">
+                                <span>Kategori</span>
+                                <button type="button" class="text-xs text-primary-500 hover:text-primary-600" data-bs-toggle="modal" data-bs-target="#addCategoryModal" title="Tambah kategori baru">
+                                    <i class="fas fa-plus-circle me-1"></i>Tambah
+                                </button>
+                            </label>
+                            <select name="category_id" id="category_id" required
                                 class="block w-full border-gray-100 bg-gray-50/50 rounded-xl shadow-sm focus:ring-primary-500 focus:border-primary-500 font-bold text-gray-900 transition-all">
                                 <option value="">Pilih Kategori</option>
-                                <option value="Food" {{ old('category') == 'Food' ? 'selected' : '' }}>Food</option>
-                                <option value="Drink" {{ old('category') == 'Drink' ? 'selected' : '' }}>Drink</option>
-                                <option value="Snack" {{ old('category') == 'Snack' ? 'selected' : '' }}>Snack</option>
-                                <option value="General" {{ old('category') == 'General' ? 'selected' : '' }}>General
-                                </option>
+                                @foreach($categories as $cat)
+                                    <option value="{{ $cat->id }}" {{ old('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -108,4 +111,89 @@
             </div>
         </div>
     </div>
+
+    <!-- Add Category Modal -->
+    <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title" id="addCategoryModalLabel">
+                        <i class="fas fa-plus-circle me-2"></i>Tambah Kategori Baru
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addCategoryForm">
+                        <div class="mb-3">
+                            <label for="categoryName" class="form-label fw-bold">Nama Kategori</label>
+                            <input type="text" class="form-control" id="categoryName" name="name" placeholder="Contoh: Makanan Berat" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="categoryDesc" class="form-label fw-bold">Deskripsi</label>
+                            <textarea class="form-control" id="categoryDesc" name="description" rows="3" placeholder="Opsional - Deskripsi kategori"></textarea>
+                        </div>
+                    </form>
+                    <div id="categoryAlert"></div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="saveCategoryBtn">
+                        <i class="fas fa-save me-1"></i>Simpan Kategori
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('saveCategoryBtn').addEventListener('click', function() {
+            const form = document.getElementById('addCategoryForm');
+            const name = document.getElementById('categoryName').value;
+            const description = document.getElementById('categoryDesc').value;
+            const alertDiv = document.getElementById('categoryAlert');
+
+            if (!name.trim()) {
+                alertDiv.innerHTML = '<div class="alert alert-warning">Nama kategori tidak boleh kosong</div>';
+                return;
+            }
+
+            fetch('{{ route("categories.store.api") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    name: name,
+                    description: description
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Add new option to select
+                    const select = document.getElementById('category_id');
+                    const option = document.createElement('option');
+                    option.value = data.category.id;
+                    option.textContent = data.category.name;
+                    select.appendChild(option);
+                    select.value = data.category.id;
+
+                    // Reset form
+                    form.reset();
+                    alertDiv.innerHTML = '<div class="alert alert-success">Kategori berhasil ditambahkan!</div>';
+                    
+                    // Close modal after 1 second
+                    setTimeout(() => {
+                        bootstrap.Modal.getInstance(document.getElementById('addCategoryModal')).hide();
+                    }, 1000);
+                } else {
+                    alertDiv.innerHTML = '<div class="alert alert-danger">Gagal menambah kategori</div>';
+                }
+            })
+            .catch(error => {
+                alertDiv.innerHTML = '<div class="alert alert-danger">Error: ' + error + '</div>';
+            });
+        });
+    </script>
 </x-app-layout>

@@ -9,6 +9,7 @@ class Product extends Model
     protected $fillable = [
         'name',
         'sku',
+        'category_id',
         'stock',
         'price',
         'image',
@@ -44,6 +45,12 @@ class Product extends Model
     {
         return $query->where('name', 'like', "%{$keyword}%")
             ->orWhere('sku', 'like', "%{$keyword}%");
+    }
+
+    // Relasi ke Category
+    public function categoryRelation()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     // Relasi ke SaleItems
