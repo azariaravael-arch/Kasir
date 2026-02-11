@@ -10,6 +10,7 @@ class Sale extends Model
         'invoice',
         'user_id',
         'total',
+        'tax_percent',
         'status'
     ];
 

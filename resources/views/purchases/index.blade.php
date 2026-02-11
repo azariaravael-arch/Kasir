@@ -1,27 +1,27 @@
 <x-app-layout>
-    <div class="container-fluid py-4">
+    <div class="container-fluid py-3 sm:py-4 px-2 sm:px-4">
     <!-- Header -->
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <h2 class="mb-0">Daftar Pembelian</h2>
+    <div class="row mb-3 sm:mb-4">
+        <div class="col-12 sm:col-8">
+            <h2 class="mb-0 text-lg sm:text-2xl font-black">Daftar Pembelian</h2>
         </div>
-        <div class="col-md-4 text-end">
-            <a href="{{ route('purchases.create') }}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Pembelian Baru
+        <div class="col-12 sm:col-4 mt-3 sm:mt-0 text-end">
+            <a href="{{ route('purchases.create') }}" class="btn btn-primary w-full sm:w-auto">
+                <i class="fas fa-plus"></i> <span class="hidden sm:inline">Pembelian Baru</span><span class="inline sm:hidden">Baru</span>
             </a>
         </div>
     </div>
 
     <!-- Filter Card -->
-    <div class="card mb-4">
-        <div class="card-body">
-            <form method="GET" action="{{ route('purchases.index') }}" class="row g-3">
-                <div class="col-md-3">
-                    <input type="text" name="search" class="form-control form-control-sm" 
-                           placeholder="Cari nomor atau supplier..." value="{{ request('search') }}">
+    <div class="card mb-3 sm:mb-4">
+        <div class="card-body p-2 sm:p-3">
+            <form method="GET" action="{{ route('purchases.index') }}" class="row g-2 sm:g-3">
+                <div class="col-12 sm:col-6 md:col-3">
+                    <input type="text" name="search" class="form-control form-control-sm text-sm" 
+                           placeholder="Cari nomor/supplier..." value="{{ request('search') }}">
                 </div>
-                <div class="col-md-2">
-                    <select name="status" class="form-select form-select-sm">
+                <div class="col-6 sm:col-6 md:col-2">
+                    <select name="status" class="form-select form-select-sm text-sm">
                         <option value="">Semua Status</option>
                         <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>Draft</option>
                         <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
@@ -29,20 +29,20 @@
                         <option value="cancelled" {{ request('status') === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
                     </select>
                 </div>
-                <div class="col-md-2">
-                    <input type="date" name="from_date" class="form-control form-control-sm" 
-                           value="{{ request('from_date') }}" placeholder="Dari Tanggal">
+                <div class="col-6 sm:col-6 md:col-2">
+                    <input type="date" name="from_date" class="form-control form-control-sm text-sm" 
+                           value="{{ request('from_date') }}">
                 </div>
-                <div class="col-md-2">
-                    <input type="date" name="to_date" class="form-control form-control-sm" 
-                           value="{{ request('to_date') }}" placeholder="Sampai Tanggal">
+                <div class="col-12 sm:col-6 md:col-2">
+                    <input type="date" name="to_date" class="form-control form-control-sm text-sm" 
+                           value="{{ request('to_date') }}">
                 </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-sm btn-info">
-                        <i class="fas fa-search"></i> Cari
+                <div class="col-12 sm:col-6 md:col-3">
+                    <button type="submit" class="btn btn-sm btn-info w-full sm:w-auto">
+                        <i class="fas fa-search"></i> <span class="hidden sm:inline">Cari</span>
                     </button>
-                    <a href="{{ route('purchases.index') }}" class="btn btn-sm btn-secondary">
-                        <i class="fas fa-redo"></i> Reset
+                    <a href="{{ route('purchases.index') }}" class="btn btn-sm btn-secondary w-full sm:w-auto mt-2 sm:mt-0">
+                        <i class="fas fa-redo"></i> <span class="hidden sm:inline">Reset</span>
                     </a>
                 </div>
             </form>

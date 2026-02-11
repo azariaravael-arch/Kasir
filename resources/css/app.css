@@ -12,6 +12,22 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+        -webkit-text-size-adjust: 100%;
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    @media (max-width: 640px) {
+        * {
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        input, textarea, select, button {
+            -webkit-appearance: none;
+            appearance: none;
+            font-size: 16px;
+        }
     }
 }
 
@@ -27,6 +43,13 @@
         border: 1px solid #f3f4f6;
     }
 
+    @media (max-width: 640px) {
+        .premium-card {
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+    }
+
     /* POS Grid Item */
     .product-item {
         background-color: #ffffff;
@@ -38,6 +61,13 @@
         cursor: pointer;
     }
 
+    @media (max-width: 640px) {
+        .product-item {
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+        }
+    }
+
     .product-item:hover {
         box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
         border-color: #20a770;
@@ -45,7 +75,9 @@
 
     /* Standard Button */
     .primary-btn {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         padding: 0.5rem 1.5rem;
         background-color: #20a770;
         color: #ffffff;
@@ -54,6 +86,15 @@
         transition: all 0.2s;
         box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
         border: none;
+        cursor: pointer;
+        font-size: 0.875rem;
+    }
+
+    @media (max-width: 640px) {
+        .primary-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
     }
 
     .primary-btn:hover {
@@ -69,6 +110,14 @@
         border-radius: 0.5rem;
         font-weight: 700;
         transition: all 0.2s;
+        cursor: pointer;
+    }
+
+    @media (max-width: 640px) {
+        .secondary-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
     }
 
     .secondary-btn:hover {
@@ -86,9 +135,43 @@
         padding-bottom: 1.5rem !important;
     }
 
+    @media (max-width: 640px) {
+        .py-8,
+        .py-12 {
+            padding-top: 1rem !important;
+            padding-bottom: 1rem !important;
+        }
+    }
+
     .mx-auto {
         margin-left: 0 !important;
         margin-right: 0 !important;
+    }
+
+    /* Responsive Table */
+    @media (max-width: 768px) {
+        table {
+            font-size: 0.875rem;
+        }
+
+        table th,
+        table td {
+            padding: 0.5rem;
+        }
+    }
+
+    /* Responsive Forms */
+    @media (max-width: 640px) {
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="password"],
+        input[type="date"],
+        select,
+        textarea {
+            font-size: 16px !important;
+            padding: 0.5rem !important;
+        }
     }
 
     /* Custom Scrollbar */
@@ -102,5 +185,14 @@
 
     ::-webkit-scrollbar-thumb {
         @apply bg-gray-300 rounded-full hover:bg-gray-400;
+    }
+
+    /* Mobile Safe Area */
+    @supports (padding: max(0px)) {
+        .pos-container,
+        .premium-card {
+            padding-left: max(1rem, env(safe-area-inset-left));
+            padding-right: max(1rem, env(safe-area-inset-right));
+        }
     }
 }

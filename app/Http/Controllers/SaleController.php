@@ -53,8 +53,11 @@ class SaleController extends Controller
                 }
             }
 
+            // Ambil tax_percent dari request (default 10 jika tidak ada)
+            $taxPercent = $request->input('tax_percent', 10);
+
             // Proses penjualan dengan transaction
-            $sale = $service->createSale($request->items, $request->user(), 'completed');
+            $sale = $service->createSale($request->items, $request->user(), 'completed', $taxPercent);
 
             return response()->json([
                 'success' => true,
@@ -74,8 +77,11 @@ class SaleController extends Controller
     public function hold(StoreSaleRequest $request, SaleService $service)
     {
         try {
+            // Ambil tax_percent dari request (default 10 jika tidak ada)
+            $taxPercent = $request->input('tax_percent', 10);
+
             // Proses hold tanpa validasi stok
-            $sale = $service->createSale($request->items, $request->user(), 'held');
+            $sale = $service->createSale($request->items, $request->user(), 'held', $taxPercent);
 
             return response()->json([
                 'success' => true,

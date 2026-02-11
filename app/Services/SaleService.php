@@ -17,11 +17,12 @@ class SaleService
      * @param array $items Item yang dijual
      * @param User $user User yang melakukan transaksi
      * @param string $status Status penjualan ('completed' atau 'held')
+     * @param float $taxPercent Persentase pajak (default 10)
      * @return Sale
      */
-    public function createSale(array $items, User $user = null, $status = 'completed')
+    public function createSale(array $items, User $user = null, $status = 'completed', $taxPercent = 10)
     {
-        return DB::transaction(function () use ($items, $user, $status) {
+        return DB::transaction(function () use ($items, $user, $status, $taxPercent) {
             $user = $user ?? auth()->user();
             $invoice = 'INV-'.date('Ymd').'-'.Str::random(5);
             $total = 0;
@@ -36,6 +37,7 @@ class SaleService
                 'invoice' => $invoice,
                 'user_id' => $user->id,
                 'total' => $total,
+                'tax_percent' => $taxPercent,
                 'status' => $status
             ]);
 
