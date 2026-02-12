@@ -2,147 +2,164 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-        :root {
-            --primary-green: #20a770;
-            --light-bg: #edf5f2;
-            --white: #ffffff;
-            --text-dark: #333333;
-            --text-muted: #888888;
-            --border-color: #e0e0e0;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
         }
 
-        /* POS Container */
+        :root {
+            --primary: #2563eb;
+            --primary-light: #eff6ff;
+            --primary-dark: #1d4ed8;
+            --gray-bg: #f9fafb;
+            --white: #ffffff;
+            --text-dark: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05);
+            --radius-lg: 20px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+        }
+
+        /* LAYOUT MENTOK KE ATAS - TANPA PADDING ATAS */
         .pos-container {
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 64px);
+            height: calc(100vh - 64px); /* Tepat di bawah navbar */
+            background: var(--gray-bg);
+            padding: 0; /* NO PADDING - MENTOK KE ATAS */
             overflow: hidden;
-            padding: 0.75rem 1rem;
         }
 
-        @media (min-width: 768px) {
-            .pos-container {
-                padding: 1.5rem 2rem;
-            }
+        /* HEADER DIHAPUS - TIDAK ADA TULISAN KASIR */
+
+        /* ===== LAYOUT 3 KOLOM ===== */
+        .pos-main {
+            display: grid;
+            grid-template-columns: 220px 1fr 380px;
+            gap: 1.25rem;
+            flex: 1;
+            overflow: hidden;
+            min-height: 0;
+            padding: 1.25rem; /* Padding hanya di dalam, bukan di container */
         }
 
-        /* Page Title */
-        .page-header {
-            margin-bottom: 1rem;
+        /* ===== KOLOM 1: FILTER KATEGORI VERTIKAL ===== */
+        .category-filter {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem 1rem;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 0.5rem;
+            overflow-y: auto;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            height: 100%;
         }
 
-        @media (min-width: 768px) {
-            .page-header {
-                margin-bottom: 2rem;
-            }
-        }
-
-        .page-title {
-            font-size: 1.25rem;
-            font-weight: 900;
-            color: var(--text-dark);
+        .filter-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            padding-left: 0.75rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        @media (min-width: 768px) {
-            .page-title {
-                font-size: 1.5rem;
-                gap: 0.75rem;
-            }
-        }
-
-        /* Layout Main */
-        .pos-main {
+        .category-vertical-item {
             display: flex;
-            flex-direction: column;
-            flex: 1;
-            overflow: hidden;
-            gap: 1rem;
-            padding: 0;
-        }
-
-        @media (min-width: 1024px) {
-            .pos-main {
-                flex-direction: row;
-                padding: 1rem;
-                gap: 1.5rem;
-            }
-        }
-
-        .products-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            overflow: hidden;
-        }
-
-        @media (min-width: 1024px) {
-            .products-section {
-                gap: 1.5rem;
-            }
-        }
-
-        .checkout-section {
-            width: 100%;
-            height: 350px;
-            background: white;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        @media (min-width: 1024px) {
-            .checkout-section {
-                width: 360px;
-                height: auto;
-                flex: 0 0 360px;
-            }
-        }
-
-        /* Search & Actions */
-        .search-container {
-            display: grid;
-            grid-template-columns: 1fr;
+            align-items: center;
             gap: 0.75rem;
+            padding: 0.7rem 1rem;
+            border-radius: var(--radius-sm);
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: 1px solid transparent;
         }
 
-        @media (min-width: 768px) {
-            .search-container {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                grid-template-columns: auto;
-                gap: 1rem;
-            }
+        .category-vertical-item i {
+            width: 20px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .category-vertical-item:hover {
+            background: #f3f4f6;
+            border-color: var(--border-color);
+        }
+
+        .category-vertical-item.active {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .category-vertical-item.active i {
+            color: var(--primary);
+        }
+
+        .category-count {
+            margin-left: auto;
+            background: #e5e7eb;
+            padding: 0.15rem 0.6rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .category-vertical-item.active .category-count {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* ===== KOLOM 2: GRID PRODUK KOTAK ===== */
+        .product-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 1.25rem 1.25rem;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            height: 100%;
         }
 
         .search-wrapper {
             position: relative;
-            width: 100%;
-        }
-
-        @media (min-width: 768px) {
-            .search-wrapper {
-                width: 300px;
-            }
+            margin-bottom: 1.25rem;
+            flex-shrink: 0;
         }
 
         .search-input {
             width: 100%;
-            padding: 0.6rem 1rem 0.6rem 2.5rem;
+            padding: 0.75rem 1rem 0.75rem 3rem;
             border-radius: 50px;
-            border: 1px solid var(--border-color);
-            background: white;
+            border: 1.5px solid var(--border-color);
+            background: #f9fafb;
             font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            background: white;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .search-icon {
@@ -151,247 +168,172 @@
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
+            font-size: 0.95rem;
         }
 
-        .add-item-btn {
-            color: var(--primary-green);
-            font-weight: 600;
-            font-size: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-transform: uppercase;
-            padding: 0.5rem 1rem;
-            background: #f0f9f6;
-            border-radius: 8px;
-            border: 1px solid var(--primary-green);
-            cursor: pointer;
-            justify-content: center;
-        }
-
-        @media (min-width: 768px) {
-            .add-item-btn {
-                font-size: 0.85rem;
-                justify-content: flex-start;
-            }
-        }
-
-        /* Product Grid */
+        /* GRID PRODUK - KOTAK SEMPURNA */
         .product-grid {
-            flex: 1;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 0.75rem;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
             overflow-y: auto;
             padding-right: 0.5rem;
-        }
-
-        @media (min-width: 640px) {
-            .product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 1rem;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-                gap: 1.25rem;
-            }
+            padding-bottom: 0.25rem;
         }
 
         .product-card {
             background: white;
-            border-radius: 12px;
-            padding: 0.75rem;
+            border-radius: var(--radius-md);
+            padding: 1rem 0.75rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            cursor: pointer;
+            border: 1.5px solid var(--border-color);
             transition: all 0.2s;
-            border: 1px solid transparent;
-        }
-
-        @media (min-width: 768px) {
-            .product-card {
-                padding: 1rem;
-            }
+            cursor: pointer;
         }
 
         .product-card:hover {
+            border-color: var(--primary);
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            border-color: var(--primary-green);
+            box-shadow: var(--shadow-md);
         }
 
         .product-image-box {
-            width: 70px;
-            height: 70px;
-            margin-bottom: 0.5rem;
+            width: 80px;
+            height: 80px;
+            background: #f3f4f6;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        @media (min-width: 768px) {
-            .product-image-box {
-                width: 100px;
-                height: 100px;
-                margin-bottom: 0.75rem;
-            }
+            margin-bottom: 0.75rem;
         }
 
         .product-image-box img {
-            max-width: 100%;
-            max-height: 100%;
+            width: 55px;
+            height: 55px;
             object-fit: contain;
         }
 
-        .product-name {
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: var(--text-dark);
-            margin-bottom: 0.25rem;
-            line-clamp: 2;
+        .product-image-box i {
+            font-size: 2.2rem;
+            color: var(--primary);
+            opacity: 0.6;
         }
 
-        @media (min-width: 768px) {
-            .product-name {
-                font-size: 0.9rem;
-            }
+        .product-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+            min-height: 2.4rem;
         }
 
         .product-price {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 700;
-            color: var(--primary-green);
+            color: var(--primary);
+            background: var(--primary-light);
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            margin-bottom: 0.35rem;
         }
 
-        @media (min-width: 768px) {
-            .product-price {
-                font-size: 1rem;
-            }
-        }
-
-        /* Categories Bar */
-        .categories-bar {
+        .product-stock {
+            font-size: 0.65rem;
+            color: var(--text-muted);
             display: flex;
-            gap: 0.75rem;
-            padding-top: 0.75rem;
-            overflow-x: auto;
-            padding-bottom: 0.5rem;
-        }
-
-        @media (min-width: 768px) {
-            .categories-bar {
-                gap: 1rem;
-                padding-top: 1rem;
-            }
-        }
-
-        .category-item {
-            background: white;
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            min-width: 100px;
-            display: flex;
-            flex-direction: column;
             align-items: center;
             gap: 0.25rem;
-            cursor: pointer;
-            transition: all 0.2s;
+        }
+
+        /* ===== KOLOM 3: CARD KASIR ===== */
+        .cashier-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
             border: 1px solid var(--border-color);
-            font-size: 0.75rem;
+            height: 100%;
         }
 
-        @media (min-width: 768px) {
-            .category-item {
-                padding: 0.75rem 1.5rem;
-                min-width: 120px;
-                gap: 0.5rem;
-                font-size: 0.85rem;
-            }
+        /* HEADER CARD KASIR - TANPA TITLE KASIR */
+        .cashier-header {
+            background: var(--primary-dark);
+            padding: 1rem 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .category-item.active {
-            border-color: var(--primary-green);
-            color: var(--primary-green);
-        }
-
-        .category-item i {
-            font-size: 1rem;
-        }
-
-        @media (min-width: 768px) {
-            .category-item i {
-                font-size: 1.2rem;
-            }
-        }
-
-        .category-item span {
-            font-size: 0.7rem;
-            font-weight: 500;
-        }
-
-        @media (min-width: 768px) {
-            .category-item span {
-                font-size: 0.85rem;
-            }
-        }
-
-        /* Checkout Sidebar */
-        .checkout-header {
-            padding: 1rem;
-            border-bottom: 1px solid #f0f0f0;
-            text-align: center;
-        }
-
-        @media (min-width: 1024px) {
-            .checkout-header {
-                padding: 1.5rem;
-            }
-        }
-
-        .checkout-header h2 {
+        .cashier-header h3 {
+            color: white;
             font-size: 1rem;
             font-weight: 700;
-            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin: 0;
         }
 
-        @media (min-width: 1024px) {
-            .checkout-header h2 {
-                font-size: 1.2rem;
-            }
+        .cashier-header h3 i {
+            font-size: 1.1rem;
         }
 
+        /* BUTTON HELD DIPINDAHKAN KE SINI */
+        .held-order-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .held-order-btn:hover {
+            background: white;
+            color: var(--primary-dark);
+            border-color: white;
+        }
+
+        /* Cart Items */
         .cart-list {
             flex: 1;
             overflow-y: auto;
-            padding: 0.75rem;
-        }
-
-        @media (min-width: 1024px) {
-            .cart-list {
-                padding: 1rem;
-            }
+            padding: 1.25rem 1rem;
+            background: #fafbfc;
+            max-height: calc(100vh - 280px);
         }
 
         .cart-item {
             display: flex;
             align-items: center;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid #f0f0f0;
-            gap: 0.75rem;
-            font-size: 0.85rem;
+            padding: 0.75rem;
+            background: white;
+            border-radius: var(--radius-sm);
+            margin-bottom: 0.75rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
         }
 
-        @media (min-width: 1024px) {
-            .cart-item {
-                padding: 1rem 0;
-                gap: 1rem;
-                font-size: 0.95rem;
-            }
+        .cart-item:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
         }
 
         .cart-item-info {
@@ -400,36 +342,29 @@
         }
 
         .cart-item-name {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 700;
             color: var(--text-dark);
-            letter-spacing: -0.01em;
+            margin-bottom: 0.2rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        @media (min-width: 1024px) {
-            .cart-item-name {
-                font-size: 0.95rem;
-            }
+        .cart-item-price {
+            font-size: 0.7rem;
+            color: var(--text-muted);
         }
 
         .qty-controls {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            background: #f8faf9;
-            padding: 2px 6px;
+            gap: 0.4rem;
+            background: white;
+            padding: 0.2rem;
             border-radius: 50px;
-            border: 1px solid #e8f2ee;
-        }
-
-        @media (min-width: 1024px) {
-            .qty-controls {
-                gap: 0.75rem;
-                padding: 4px 8px;
-            }
+            border: 1px solid var(--border-color);
+            margin: 0 0.5rem;
         }
 
         .qty-btn {
@@ -439,278 +374,396 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid var(--primary-green);
-            color: var(--primary-green);
-            background: white;
+            border: none;
+            background: #f3f4f6;
+            color: var(--text-dark);
             font-size: 14px;
-            font-weight: 800;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        @media (min-width: 1024px) {
-            .qty-btn {
-                width: 28px;
-                height: 28px;
-                font-size: 16px;
-            }
-        }
-
         .qty-btn:hover {
-            background: var(--primary-green);
+            background: var(--primary);
             color: white;
         }
 
-        .cart-item-price {
-            font-weight: 900;
-            color: var(--text-dark);
-            min-width: 70px;
-            text-align: right;
+        .qty-value {
+            font-weight: 700;
             font-size: 0.85rem;
-            white-space: nowrap;
+            min-width: 22px;
+            text-align: center;
         }
 
-        @media (min-width: 1024px) {
-            .cart-item-price {
-                min-width: 90px;
-                font-size: 0.95rem;
-            }
+        .cart-item-subtotal {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.85rem;
+            min-width: 65px;
+            text-align: right;
         }
 
-        .checkout-summary {
-            padding: 1rem;
-            background: #fafafa;
-            border-radius: 0 0 12px 12px;
-        }
-
-        @media (min-width: 1024px) {
-            .checkout-summary {
-                padding: 1.5rem;
-            }
+        /* Payment Summary */
+        .payment-summary {
+            padding: 1.25rem 1.25rem 0.75rem;
+            background: white;
+            border-top: 1px solid var(--border-color);
         }
 
         .summary-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 0.3rem;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        @media (min-width: 1024px) {
-            .summary-row {
-                margin-bottom: 0.5rem;
-                font-size: 0.9rem;
-            }
+            align-items: center;
+            margin-bottom: 0.6rem;
+            font-size: 0.85rem;
         }
 
         .summary-row.total {
             margin-top: 0.75rem;
             padding-top: 0.75rem;
-            border-top: 1px solid #eee;
-            color: var(--primary-green);
-            font-weight: 700;
+            border-top: 2px solid var(--border-color);
             font-size: 1rem;
+            font-weight: 800;
         }
 
-        @media (min-width: 1024px) {
-            .summary-row.total {
-                margin-top: 1rem;
-                padding-top: 1rem;
-                font-size: 1.2rem;
-            }
+        .summary-label {
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
         }
 
-        .action-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        .summary-label i {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .summary-value {
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .total-value {
+            color: var(--primary);
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .summary-input {
+            width: 60px;
+            padding: 0.3rem 0.4rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 6px;
+            font-weight: 600;
+            text-align: right;
+            background: #f9fafb;
+            font-size: 0.8rem;
+        }
+
+        .summary-input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        /* Action Buttons */
+        .cashier-actions {
+            display: flex;
             gap: 0.75rem;
-            margin-top: 1rem;
-        }
-
-        @media (min-width: 1024px) {
-            .action-buttons {
-                gap: 1rem;
-                margin-top: 1.5rem;
-            }
+            padding: 0.75rem 1.25rem 1.25rem;
         }
 
         .btn {
-            padding: 0.6rem;
-            border-radius: 6px;
-            font-weight: 600;
+            padding: 0.7rem 0.8rem;
+            border-radius: 12px;
+            font-weight: 700;
             font-size: 0.8rem;
             cursor: pointer;
             text-align: center;
-            transition: opacity 0.2s;
-        }
-
-        @media (min-width: 1024px) {
-            .btn {
-                padding: 0.75rem;
-                font-size: 0.9rem;
-            }
-        }
-
-        .btn-cancel {
-            border: 1px solid #d9534f;
-            color: #d9534f;
+            transition: all 0.2s;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            flex: 1;
         }
 
         .btn-hold {
-            border: 1px solid var(--primary-green);
-            color: var(--primary-green);
+            background: #f3f4f6;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-hold:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-cancel {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .btn-cancel:hover {
+            background: #dc2626;
+            color: white;
         }
 
         .btn-pay {
-            grid-column: span 2;
-            background: var(--primary-green);
+            background: var(--primary);
             color: white;
-            font-size: 0.95rem;
-            margin-top: 0.25rem;
+            font-size: 0.9rem;
+            padding: 0.8rem;
         }
 
-        @media (min-width: 1024px) {
-            .btn-pay {
-                font-size: 1.1rem;
-                margin-top: 0.5rem;
-            }
+        .btn-pay:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
 
-        .btn:hover {
-            opacity: 0.8;
+        /* Empty Cart */
+        .empty-cart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 180px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .empty-cart i {
+            font-size: 2.8rem;
+            color: var(--border-color);
+            margin-bottom: 0.75rem;
+        }
+
+        .empty-cart p {
+            font-size: 0.85rem;
+            font-weight: 500;
         }
 
         /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: #ccc;
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
             border-radius: 10px;
         }
 
-        .text-green {
-            color: var(--primary-green);
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
         }
 
-        @media (max-width: 768px) {
-            .qty-value {
-                font-size: 0.75rem;
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .pos-main {
+                grid-template-columns: 200px 1fr 340px;
+            }
+            
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .pos-main {
+                grid-template-columns: 180px 1fr 320px;
             }
         }
     </style>
 
-    <div class="pos-container px-3 sm:px-6 py-3 sm:py-4">
-        <div class="page-header">
-            <h1 class="text-lg sm:text-2xl font-black text-gray-900 flex items-center gap-2 sm:gap-3">
-                <i class="fas fa-shopping-cart text-primary-500"></i>
-                <span>Kasir</span>
-            </h1>
-            <a href="{{ route('pos.heldPage') }}" class="px-2 sm:px-3 py-1.5 sm:py-2 bg-emerald-500 text-white rounded text-xs sm:text-sm whitespace-nowrap">Held Orders</a>
-        </div>
-
-        <!-- Main Content -->
+    <div class="pos-container">
+        <!-- TIDAK ADA HEADER/TULISAN KASIR - MENTOK KE ATAS -->
+        
+        <!-- Main: 3 Kolom -->
         <main class="pos-main">
-            <!-- Left: Products -->
-            <section class="products-section">
-                <div class="search-container">
-                    <div class="add-item-btn cursor-pointer">
-                        <span class="text-lg">+</span> <span class="hidden sm:inline">Add New Item</span><span class="inline sm:hidden">Add</span>
+            
+            <!-- ===== KOLOM 1: FILTER KATEGORI VERTIKAL ===== -->
+            <div class="category-filter custom-scrollbar">
+                <div class="filter-title">
+                    <i class="fas fa-filter"></i> KATEGORI PRODUK
+                </div>
+                
+                <div class="category-vertical-item active">
+                    <i class="fas fa-box"></i>
+                    <span>Semua Produk</span>
+                    <span class="category-count">{{ $products->count() }}</span>
+                </div>
+                
+                @foreach($categories as $category)
+                <div class="category-vertical-item category-btn" data-category="{{ $category->name }}">
+                    <i class="fas fa-tag"></i>
+                    <span>{{ $category->name }}</span>
+                    <span class="category-count">
+                        {{ $category->products_count ?? $category->products?->count() ?? 0 }}
+                    </span>
+                </div>
+                @endforeach
+                
+                <div style="margin-top: auto; padding-top: 1rem;">
+                    <div class="filter-title">
+                        <i class="fas fa-cog"></i> PENGATURAN
                     </div>
-                    <div class="search-wrapper">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" id="searchInput" class="search-input text-sm" placeholder="Search...">
-                        <button
-                            class="absolute right-0 top-0 h-full w-10 bg-emerald-500 rounded-r-full text-white flex items-center justify-center text-sm">
-                            <i class="fas fa-search"></i>
-                        </button>
+                    <div class="category-vertical-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Riwayat</span>
                     </div>
                 </div>
+            </div>
 
+            <!-- ===== KOLOM 2: GRID PRODUK KOTAK ===== -->
+            <div class="product-section">
+                <!-- Search -->
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Cari produk atau menu...">
+                </div>
+
+                <!-- Product Grid - Kotak -->
                 <div class="product-grid custom-scrollbar" id="productList">
                     @foreach($products as $p)
-                        <div class="product-card product-item" data-id="{{ $p->id }}" data-name="{{ $p->name }}"
-                            data-price="{{ $p->price }}" data-stock="{{ $p->stock }}" data-category="{{ $p->category }}"
-                            onclick="addItem('{{ $p->id }}', '{{ addslashes($p->name) }}', {{ $p->price }}, {{ $p->stock }})">
-                            <div class="product-image-box">
-                                @if($p->image)
-                                    <img src="{{ asset('storage/' . $p->image) }}" alt="{{ $p->name }}">
-                                @else
-                                    <div class="text-4xl opacity-30">📦</div>
-                                @endif
-                            </div>
-                            <h3 class="product-name">{{ $p->name }}</h3>
-                            <div class="product-price">Rp{{ number_format($p->price, 0, ',', '.') }}</div>
+                    <div class="product-card product-item" 
+                         data-id="{{ $p->id }}" 
+                         data-name="{{ $p->name }}"
+                         data-price="{{ $p->price }}" 
+                         data-stock="{{ $p->stock }}" 
+                         data-category="{{ $p->categoryRelation?->name ?? 'Uncategorized' }}"
+                         onclick="addItem('{{ $p->id }}', '{{ addslashes($p->name) }}', {{ $p->price }}, {{ $p->stock }})">
+                        <div class="product-image-box">
+                            @if($p->image)
+                                <img src="{{ asset('storage/' . $p->image) }}" alt="{{ $p->name }}">
+                            @else
+                                <i class="fas fa-box"></i>
+                            @endif
                         </div>
-                    @endforeach
-                </div>
-
-                <!-- Categories -->
-                <div class="categories-bar no-scrollbar">
-                    <div class="category-item active category-btn" data-category="All">
-                        <i class="fas fa-coffee"></i>
-                        <span>Semua</span>
+                        <h3 class="product-name">{{ $p->name }}</h3>
+                        <div class="product-price">Rp {{ number_format($p->price, 0, ',', '.') }}</div>
+                        <div class="product-stock">
+                            <i class="fas fa-cubes"></i> {{ $p->stock }}
+                        </div>
                     </div>
-                    @foreach($categories as $category)
-                        <div class="category-item category-btn" data-category="{{ $category }}">
-                            <i class="fas fa-utensils"></i>
-                            <span>{{ $category }}</span>
-                        </div>
                     @endforeach
                 </div>
-            </section>
+            </div>
 
-            <!-- Right: Checkout -->
-            <aside class="checkout-section">
+            <!-- ===== KOLOM 3: CARD KASIR ===== -->
+            <div class="cashier-card">
+                <!-- HEADER CARD KASIR + BUTTON HELD -->
+                <div class="cashier-header">
+                    <h3>
+                        <i class="fas fa-credit-card"></i>
+                        Pembayaran
+                    </h3>
+                    <!-- BUTTON HELD DIPINDAHKAN KE SINI -->
+                    <a href="{{ route('pos.heldPage') }}" class="held-order-btn">
+                        <i class="fas fa-clock"></i>
+                        Held Orders
+                    </a>
+                </div>
 
+                <!-- Cart Items -->
                 <div class="cart-list custom-scrollbar" id="cartItems">
-                    <div class="text-center py-10 text-gray-400 italic text-sm">
-                        <p>Keranjang kosong</p>
+                    <div class="empty-cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <p>Keranjang masih kosong</p>
+                        <p style="font-size: 0.7rem; margin-top: 0.4rem; color: #9ca3af;">Klik produk untuk menambah</p>
                     </div>
                 </div>
 
-                <div class="checkout-summary">
+                <!-- Payment Summary -->
+                <div class="payment-summary">
                     <div class="summary-row">
-                        <span>Discount (%)</span>
-                        <input type="number" id="discount" value="0"
-                            class="w-16 text-right border-none bg-transparent font-bold focus:ring-0 p-0" min="0">
+                        <span class="summary-label">
+                            <i class="fas fa-tag"></i> Diskon
+                        </span>
+                        <div class="input-group">
+                            <input type="number" id="discount" value="0" class="summary-input" min="0" max="100" step="1">
+                            <span style="color: var(--text-muted); font-size: 0.8rem;">%</span>
+                        </div>
                     </div>
+                    
                     <div class="summary-row">
-                        <span>Sub Total</span>
-                        <span id="subtotal" class="font-bold text-gray-700">Rp 0</span>
+                        <span class="summary-label">
+                            <i class="fas fa-calculator"></i> Sub Total
+                        </span>
+                        <span id="subtotal" class="summary-value">Rp 0</span>
                     </div>
+                    
                     <div class="summary-row">
-                        <span class="text-green">Tax <input type="number" id="taxPercent" value="10" min="0" max="100" class="w-12 text-right border-none bg-transparent font-bold focus:ring-0 p-0">%</span>
-                        <span id="tax" class="font-bold text-gray-700">Rp 0</span>
+                        <span class="summary-label">
+                            <i class="fas fa-percent"></i> Pajak
+                        </span>
+                        <div class="input-group">
+                            <input type="number" id="taxPercent" value="10" class="summary-input" min="0" max="100" step="1">
+                            <span style="color: var(--text-muted); font-size: 0.8rem;">%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <span class="summary-label">
+                            <i class="fas fa-file-invoice"></i> Nilai Pajak
+                        </span>
+                        <span id="tax" class="summary-value">Rp 0</span>
                     </div>
 
                     <div class="summary-row total">
-                        <span>Total</span>
-                        <span id="total">Rp 0</span>
-                    </div>
-
-                    <div class="action-buttons">
-                        <button onclick="cancelOrder()" class="btn btn-cancel">Cancel Order</button>
-                        <button onclick="holdOrder()" class="btn btn-hold">Hold Order</button>
-                        <button onclick="checkout()" class="btn btn-pay">Pay (<span id="totalDisplay">Rp
-                                0</span>)</button>
+                        <span class="summary-label">TOTAL</span>
+                        <span id="total" class="total-value">Rp 0</span>
                     </div>
                 </div>
-            </aside>
+
+                <!-- Action Buttons -->
+                <div class="cashier-actions">
+                    <button onclick="holdOrder()" class="btn btn-hold">
+                        <i class="fas fa-pause-circle"></i> Hold
+                    </button>
+                    <button onclick="cancelOrder()" class="btn btn-cancel">
+                        <i class="fas fa-times-circle"></i> Batal
+                    </button>
+                    <button onclick="checkout()" class="btn btn-pay">
+                        <i class="fas fa-check-circle"></i> Bayar
+                    </button>
+                </div>
+                
+                <!-- Total Display untuk Button Bayar (Hidden) -->
+                <span id="totalDisplay" style="display: none;">Rp 0</span>
+            </div>
         </main>
     </div>
 
-    
-
-    <!-- Font Awesome for Icons -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script>
         let items = [];
         let currentCategory = 'All';
 
+        // Format currency
+        function formatCurrency(value) {
+            const formatter = new Intl.NumberFormat('id-ID', { 
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            });
+            return 'Rp ' + formatter.format(Math.round(value));
+        }
+
+        // Filter produk
         function filterProducts() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const products = document.querySelectorAll('.product-item');
@@ -720,36 +773,43 @@
                 const category = p.dataset.category;
                 const matchesSearch = name.includes(query);
                 const matchesCategory = (currentCategory === 'All' || category === currentCategory);
-
-                if (matchesSearch && matchesCategory) {
-                    p.style.display = '';
-                } else {
-                    p.style.display = 'none';
-                }
+                p.style.display = matchesSearch && matchesCategory ? '' : 'none';
             });
         }
 
         document.getElementById('searchInput').addEventListener('input', filterProducts);
 
-        document.querySelectorAll('.category-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                document.querySelectorAll('.category-btn').forEach(b => {
-                    b.classList.remove('active');
+        // Kategori vertikal
+        document.querySelectorAll('.category-vertical-item').forEach((btn, index) => {
+            btn.addEventListener('click', function() {
+                if (this.querySelector('.filter-title')) return;
+                
+                document.querySelectorAll('.category-vertical-item').forEach(b => {
+                    if (!b.querySelector('.filter-title')) {
+                        b.classList.remove('active');
+                    }
                 });
                 this.classList.add('active');
-
-                currentCategory = this.dataset.category;
+                
+                if (index === 1) {
+                    currentCategory = 'All';
+                } else {
+                    const categorySpan = this.querySelector('span:nth-child(2)');
+                    currentCategory = categorySpan ? categorySpan.textContent : 'All';
+                }
+                
                 filterProducts();
             });
         });
 
+        // Add item
         function addItem(productId, name, price, stock) {
             const existing = items.find(i => i.product_id == productId);
             if (existing) {
                 if (existing.qty < stock) {
                     existing.qty++;
                 } else {
-                    alert('Maaf, stok tidak mencukupi');
+                    alert('Stok tidak mencukupi!');
                     return;
                 }
             } else {
@@ -758,13 +818,16 @@
             updateCart();
         }
 
+        // Update cart
         function updateCart() {
-            const cartItemsContainer = document.getElementById('cartItems');
-
+            const cartContainer = document.getElementById('cartItems');
+            
             if (items.length === 0) {
-                cartItemsContainer.innerHTML = `
-                    <div class="text-center py-20 text-gray-400 italic">
+                cartContainer.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fas fa-shopping-cart"></i>
                         <p>Keranjang masih kosong</p>
+                        <p style="font-size: 0.7rem; margin-top: 0.4rem; color: #9ca3af;">Klik produk untuk menambah</p>
                     </div>
                 `;
             } else {
@@ -774,26 +837,30 @@
                         <div class="cart-item">
                             <div class="cart-item-info">
                                 <div class="cart-item-name">${item.name}</div>
+                                <div class="cart-item-price">Rp ${item.price.toLocaleString('id-ID')}</div>
                             </div>
                             <div class="qty-controls">
-                                <button onclick="updateQty(${index}, -1)" class="qty-btn">-</button>
-                                <span class="font-black text-sm w-5 text-center">${item.qty}</span>
+                                <button onclick="updateQty(${index}, -1)" class="qty-btn">−</button>
+                                <span class="qty-value">${item.qty}</span>
                                 <button onclick="updateQty(${index}, 1)" class="qty-btn">+</button>
                             </div>
-                            <div class="cart-item-price">Rp ${new Intl.NumberFormat('id-ID').format(item.price * item.qty)}</div>
+                            <div class="cart-item-subtotal">Rp ${(item.price * item.qty).toLocaleString('id-ID')}</div>
                         </div>
                     `;
                 });
-                cartItemsContainer.innerHTML = html;
+                cartContainer.innerHTML = html;
             }
             updateTotal();
         }
 
+        // Update quantity
         function updateQty(index, change) {
             const item = items[index];
             const newQty = item.qty + change;
-            if (newQty < 1) removeItem(index);
-            else if (newQty <= item.stock) {
+            if (newQty < 1) {
+                items.splice(index, 1);
+                updateCart();
+            } else if (newQty <= item.stock) {
                 item.qty = newQty;
                 updateCart();
             } else {
@@ -801,11 +868,7 @@
             }
         }
 
-        function removeItem(index) {
-            items.splice(index, 1);
-            updateCart();
-        }
-
+        // Cancel order
         function cancelOrder() {
             if (items.length > 0 && confirm('Kosongkan keranjang?')) {
                 items = [];
@@ -813,6 +876,7 @@
             }
         }
 
+        // Update total
         function updateTotal() {
             const subtotalValue = items.reduce((sum, i) => sum + (i.qty * i.price), 0);
             const discountValue = parseInt(document.getElementById('discount').value) || 0;
@@ -820,9 +884,9 @@
             const taxValue = subtotalValue * (taxPercentValue / 100);
             const totalValue = subtotalValue - (subtotalValue * (discountValue / 100)) + taxValue;
 
-            document.getElementById('subtotal').textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(subtotalValue);
-            document.getElementById('tax').textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(taxValue);
-            const formattedTotal = 'Rp ' + new Intl.NumberFormat('id-ID').format(Math.max(0, totalValue));
+            document.getElementById('subtotal').textContent = formatCurrency(subtotalValue);
+            document.getElementById('tax').textContent = formatCurrency(taxValue);
+            const formattedTotal = formatCurrency(Math.max(0, totalValue));
             document.getElementById('total').textContent = formattedTotal;
             document.getElementById('totalDisplay').textContent = formattedTotal;
         }
@@ -830,56 +894,66 @@
         document.getElementById('discount').addEventListener('input', updateTotal);
         document.getElementById('taxPercent').addEventListener('input', updateTotal);
 
+        // Checkout
         function checkout() {
             if (items.length === 0) return alert('Pilih produk terlebih dahulu!');
-            if (!confirm('Lanjutkan proses pembayaran dan cetak struk?')) return;
+            if (!confirm('Lanjutkan pembayaran?')) return;
 
             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             const taxPercent = parseInt(document.getElementById('taxPercent').value) || 0;
+            
             fetch('{{ route('pos.store') }}', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'X-CSRF-TOKEN': token 
+                },
                 body: JSON.stringify({ items: items, tax_percent: taxPercent })
             })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        items = [];
-                        updateCart();
-                        window.location.href = `/pos/${data.sale_id}/receipt`;
-                    } else {
-                        alert('Terjadi kesalahan: ' + data.message);
-                    }
-                })
-                .catch(err => alert('Gagal memproses transaksi'));
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    items = [];
+                    updateCart();
+                    window.location.href = `/pos/${data.sale_id}/receipt`;
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(err => alert('Gagal memproses transaksi'));
         }
 
-        // Hold order: send items to backend and clear cart
+        // Hold order
         function holdOrder() {
             if (items.length === 0) return alert('Pilih produk terlebih dahulu!');
             if (!confirm('Hold order ini?')) return;
 
             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             const taxPercent = parseInt(document.getElementById('taxPercent').value) || 0;
+            
             fetch('{{ route('pos.hold') }}', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'X-CSRF-TOKEN': token 
+                },
                 body: JSON.stringify({ items: items, tax_percent: taxPercent })
             })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        items = [];
-                        updateCart();
-                        alert('Order berhasil di-hold');
-                    } else {
-                        alert('Gagal: ' + data.message);
-                    }
-                })
-                .catch(err => alert('Gagal memproses hold order'));
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    items = [];
+                    updateCart();
+                    alert('Order berhasil di-hold');
+                } else {
+                    alert('Gagal: ' + data.message);
+                }
+            })
+            .catch(err => alert('Gagal hold order'));
         }
-        // Load picked-up resumed cart from localStorage on page load
-        document.addEventListener('DOMContentLoaded', function () {
+
+        // Load stored cart
+        document.addEventListener('DOMContentLoaded', function() {
             try {
                 const stored = localStorage.getItem('pos_items');
                 if (stored) {
@@ -892,6 +966,12 @@
                 }
             } catch (e) {
                 console.error('Failed to load stored cart', e);
+            }
+            
+            // Set active category ke "Semua Produk"
+            const allCategory = document.querySelector('.category-vertical-item.active');
+            if (allCategory) {
+                currentCategory = 'All';
             }
         });
     </script>

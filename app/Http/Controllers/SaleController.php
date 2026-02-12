@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Category;
 use App\Models\Sale;
 use App\Services\SaleService;
 use App\Http\Requests\StoreSaleRequest;
@@ -15,7 +16,7 @@ class SaleController extends Controller
     public function index()
     {
         $products = Product::active()->orderBy('name')->get();
-        $categories = Product::active()->select('category')->distinct()->pluck('category');
+        $categories = Category::orderBy('name')->get();
         return view('pos.index', compact('products', 'categories'));
     }
 
