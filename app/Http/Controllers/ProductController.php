@@ -77,13 +77,26 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        if ($product->image && \Storage::disk('public')->exists($product->image)) {
-            \Storage::disk('public')->delete($product->image);
-        }
-        $product->delete();
+        try {
+            // Hapus semua relasi produk terlebih dahulu
+            \DB::table('purchase_items')->where('product_id', $product->id)->delete();
+            \DB::table('sale_items')->where('product_id', $product->id)->delete();
+            \DB::table('return_items')->where('product_id', $product->id)->delete();
 
-        return redirect()->route('products.index')
-            ->with('success', 'Produk berhasil dihapus');
+            // Hapus image produk jika ada
+            if ($product->image && \Storage::disk('public')->exists($product->image)) {
+                \Storage::disk('public')->delete($product->image);
+            }
+
+            // Hapus produk
+            $product->delete();
+
+            return redirect()->route('products.index')
+                ->with('success', 'Produk berhasil dihapus');
+        } catch (\Exception $e) {
+            return redirect()->route('products.index')
+                ->with('error', 'Gagal menghapus produk: ' . $e->getMessage());
+        }
     }
 
     // API untuk live search (digunakan di POS)
